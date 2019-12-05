@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>各种图形</title>
+    <link rel="stylesheet" href="./style.css">
+</head>
+
+<body>
+    <canvas id="xxx" width="300" height="300"></canvas>
+    <script>
+        var yyy = document.getElementById('xxx')
+        var ctx = yyy.getContext('2d')
+        flag = false
+        
+        var path = { 'x': undefined, 'y': undefined }
+
+        yyy.onmousedown = function (a) {
+            flag = true
+            var x = a.clientX
+            var y = a.clientY
+            path = { 'x': x, 'y': y }
+            drawCircle(x, y, 4)
+        }
+        yyy.onmousemove = function (a) {
+            if (flag) {
+                var x = a.clientX
+                var y = a.clientY
+                var newPath = { 'x': x, 'y': y }
+                drawLine(path.x, path.y, newPath.x, newPath.y)
+                drawCircle(x, y, 4)
+                path = newPath
+            }
+        }
+        yyy.onmouseup = function (a) {
+            flag = false
+        }
+
+        //circle
+        function drawCircle(x, y, radius) {
+            ctx.fillStyle = 'red'
+            ctx.beginPath()
+            ctx.arc(x, y, radius, 0, Math.PI * 2) //圆心位置，半径，开始角度，结束角度
+            ctx.fill()
+        }
+        //line
+        function drawLine(beginX, beginY, closeX, closeY) {
+            ctx.beginPath()
+            ctx.strokeStyle = 'red'
+            ctx.moveTo(beginX, beginY)
+            ctx.lineTo(closeX, closeY)
+            ctx.lineWidth = 8
+            ctx.stroke()
+        }
+
+
+
+
+
+    </script>
+</body>
+
+</html>
