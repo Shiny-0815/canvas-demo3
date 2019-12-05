@@ -11,34 +11,63 @@
 
 <body>
     <canvas id="xxx" width="300" height="300"></canvas>
+    <button id="eraser">橡皮擦</button>
     <script>
         var yyy = document.getElementById('xxx')
-        var ctx = yyy.getContext('2d')
-        flag = false
-        
-        var path = { 'x': undefined, 'y': undefined }
+        //全屏
+        autoCanvasSize(yyy)
 
-        yyy.onmousedown = function (a) {
-            flag = true
-            var x = a.clientX
-            var y = a.clientY
-            path = { 'x': x, 'y': y }
-            drawCircle(x, y, 4)
+        /*********/
+        var ctx = yyy.getContext('2d')
+        using = false
+        var path = { 'x': undefined, 'y': undefined }
+        xxx(ctx)
+
+        /*******/
+        //橡皮擦
+        var eraserEnabled = false
+        eraser.onclick = function () {
+            eraserEnabled = !eraserEnabled
         }
-        yyy.onmousemove = function (a) {
-            if (flag) {
-                var x = a.clientX
-                var y = a.clientY
-                var newPath = { 'x': x, 'y': y }
-                drawLine(path.x, path.y, newPath.x, newPath.y)
-                drawCircle(x, y, 4)
-                path = newPath
+
+        /********/
+        //工具
+        function autoCanvasSize(canvas) {
+            setCanvasSize(canvas)
+            window.onresize = function () {
+                setCanvasSize(canvas)
             }
         }
-        yyy.onmouseup = function (a) {
-            flag = false
-        }
+        function xxx(ctx) {
+            yyy.onmousedown = function (a) {
+                var x = a.clientX
+                var y = a.clientY
+                using = true
+                if (eraserEnabled) {
+                    ctx.clearRect(x - 4, y - 4, 8, 8)
+                } else {
+                    path = { 'x': x, 'y': y }
+                    drawCircle(x, y, 4)
+                }
 
+            }
+            yyy.onmousemove = function (a) {
+                var x = a.clientX
+                var y = a.clientY
+                if (!using) { return }
+                if (eraserEnabled) {
+                    ctx.clearRect(x - 4, y - 4, 8, 8)
+                } else {
+                    var newPath = { 'x': x, 'y': y }
+                    drawLine(path.x, path.y, newPath.x, newPath.y)
+                    drawCircle(x, y, 4)
+                    path = newPath
+                }
+            }
+            yyy.onmouseup = function (a) {
+                using = false
+            }
+        }
         //circle
         function drawCircle(x, y, radius) {
             ctx.fillStyle = 'red'
@@ -56,7 +85,12 @@
             ctx.stroke()
         }
 
-
+        function setCanvasSize(canvas) {
+            var pageWidth = document.documentElement.clientWidth
+            var pageHeight = document.documentElement.clientHeight
+            canvas.width = pageWidth
+            canvas.height = pageHeight
+        }
 
 
 
