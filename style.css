@@ -1,11 +1,23 @@
-body{
+body {
     margin: 0;
 }
-canvas{
+
+canvas {
     background: #425894;
 }
-#eraser{
+
+.actions {
     position: fixed;
-    bottom: 0;
+    top: 0;
     left: 0;
+}
+.actions > #brush {
+    display: none;
+}
+
+.actions.x > #eraser{
+    display: none;
+}
+.actions.x > #brush{
+    display: inline-block;
 }
